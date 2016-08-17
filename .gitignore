@@ -1,2 +1,4 @@
 Autonomous_Mobile_Robots.pdf
 .texpadtmp
+*.aux
+*.log
