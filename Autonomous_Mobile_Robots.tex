@@ -8,6 +8,7 @@
 \usepackage{blindtext}
 \usepackage{paralist}
 \usepackage[boxed]{algorithm2e}
+\usepackage{booktabs}
 
 \setlength\parindent{0ex}
 \setlength{\columnsep}{10mm}
@@ -335,15 +336,63 @@ $S$ and wheel frame $W$:
 (Two robots with the same $\varphi_M$ may not be equivalent
 \textbf{instantaneously}.)
 
-\vtspace
 
 % TODO
 % Add if more space:
 % - differential kinematics
+% - general wheel equation
+% - kinematics of differential drive robot
+% - wheel equation of swedish/castor wheel
+
+\vtspace
 
 \section{Perception I}
+\vmspace
 
-\blindtext[3]
+\begin{minipage}{\columnwidth}
+  \begin{center}
+    \begin{tabular}{lll}\toprule
+      \textbf{Sensor Type} & \textbf{System} & \textbf{Class} \\\hline
+      Tactile & Bumpers & EC, P \\
+      Wheel/motor & Brush encoders & PC, P \\
+      & Optical encoders & PC, A \\
+      Heading & Compass & EC, P \\
+      & Gyroscope & PC, P \\
+      & Inclinometer & EC, A/P \\
+      Acceleration & Accelerometer & PC, P \\
+      Beacons & GPS & EC, A \\
+              & Radio, ultrasonic, & EC, A \\
+              & Reflective Beacons \\
+      Motion/speed & Doppler: radar/sound & EC, A \\
+      Range & Ultrasound, laser, & EC, A \\
+            & struct. light, ToF \\
+      Vision & CCD/CMOS & EC, P \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vmspace
+  (PC = \textbf{proprioceptive}, EC = \textbf{exteroceptive}, A = active, P =
+  passive)
+\end{minipage}
+
+\vpspace
+
+\begin{minipage}{\columnwidth}
+  \textbf{Range sensors}: Traveled distance $d$ of a sound or electromagnetic
+  wave after a \textbf{time of flight} $t$ is given by
+  \vmspace
+  \begin{center}
+    $d=ct,\;\;\; c = 0.3\,\mathrm m / \mathrm{ms}\,\text{(sound)} \; / \;
+    0.3\,\mathrm m / \mathrm{ns}\,\text{(light)}.$
+  \end{center}
+\end{minipage}
+
+% TODO:
+% - Error propagation law
+% - Phase shift of laser rangefinder
+% - Intro to Computer Vision / Human Vision
+
+
 
 \section{Perception II}
 
