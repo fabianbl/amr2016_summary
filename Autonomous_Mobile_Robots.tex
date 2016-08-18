@@ -1,45 +1,55 @@
-\documentclass[8pt,landscape]{article}
-\usepackage[a4paper,top=0.5cm,bottom=0.5cm,left=0.5cm,right=0.5cm]{geometry}
+\documentclass[landscape]{article}
+\usepackage[a4paper, top=0.5cm, bottom=0.5cm, left=0.5cm, right=0.5cm]{geometry}
 
-\usepackage[ngerman]{babel}
-\usepackage{graphicx}
 \usepackage[utf8]{inputenc}
-\usepackage{amsfonts}
-\usepackage{multicol}
-\setlength\parindent{0ex}
 \usepackage{amsmath, amsfonts, amssymb}
-\setlength{\columnsep}{10mm}
+\usepackage{multicol}
+\usepackage{graphicx}
 \usepackage{blindtext}
 \usepackage{paralist}
-\usepackage{bbm} % Natural numbers etc.
 \usepackage[boxed]{algorithm2e}
 
+\setlength\parindent{0ex}
+\setlength{\columnsep}{10mm}
+
 \newcommand{\vmspace}{\vspace{-7pt}}
-\newcommand{\vpspace}{\vspace{9pt}}
+\newcommand{\vpspace}{\vspace{5pt}}
+\newcommand{\vtspace}{\vspace{-10pt}}
 
-
-% -------------- Beginning of Document ---------------.
 \begin{document}
 
-
-\renewcommand{\labelitemi}{--}
-%\setlist{noitemsep}
 \pagestyle{empty}
 \raggedright
 \setlength{\columnsep}{2mm}
 \setlength{\columnseprule}{0.1mm}
-\begin{multicols}{3}
-\title{\textbf{Autonomous\\ Mobile Robots}}
-\author{Fabian Blöchliger}
-\date{Spring Semester 2016}
-\maketitle
+\renewcommand{\labelitemi}{--}
 
+\begin{multicols}{3}
+
+%\title{\textbf{Autonomous Mobile Robots}}
+%\author{Fabian Bl\"ochliger}
+%\date{Spring Semester 2016}
+%\maketitle
+
+\begin{tabular}{|c|}\hline
+  \LARGE \textbf{Autonomous Mobile Robots}\\[6pt]
+  \large Fabian Bl\"ochliger\\[6pt]
+  \large \textit{Spring Semester 2016}\\\hline
+\end{tabular}
+
+\vtspace
 
 \section{Introduction and Motivation}
 
+\vmspace
+
 \includegraphics[width=\columnwidth]{img/1_SeeThinkAct.png}
 
+\vspace{-12pt}
+
 \section{Locomotion Concepts}
+
+\vmspace
 
 \begin{minipage}{\columnwidth}
   To get from the inertial frame $I$ to body frame $B$:
@@ -166,15 +176,13 @@
   (Newton's method):\\
   \vmspace
   \begin{algorithm}[H]
-    $\mathbf q = \mathbf q^0$\;
-    $\mathbf r = \mathbf r(\mathbf q)$\;
+    $\mathbf q = \mathbf q^0,\;\mathbf r = \mathbf r(\mathbf q)$\;
     \While{$\| \mathbf r - \mathbf r^\mathrm{goal} \| > \mathrm{threshold}$}
     {
     $\mathbf q = \mathbf q + \mathbf J^+(\mathbf q) \cdot (\mathbf r^\text{goal}
-    - \mathbf r)$\;
-    $\mathbf r = \mathbf r ( \mathbf q )$\;
+    - \mathbf r),\;\;
+    \mathbf r = \mathbf r ( \mathbf q )$\;
     }
-    \Return $\mathbf q$.
   \end{algorithm}
 \end{minipage}
 
@@ -194,9 +202,144 @@
 % TODO
 % - Check column-rank / row-rank deficiency.
 
+\vtspace
+
 \section{Mobile Robot Kinematics}
 
-\blindtext[3]
+\vmspace
+
+\begin{minipage}{\columnwidth}
+\textbf{Fixed/steered standard wheel} model with robot frame $R$, steering frame
+$S$ and wheel frame $W$:
+\vmspace
+\vmspace
+\begin{center}
+  \includegraphics[width=0.9\columnwidth]{img/3_Wheel.png}
+\end{center}
+\end{minipage}
+
+
+\begin{minipage}{\columnwidth}
+  Rolling constraint:
+  \vmspace
+  \begin{center}
+    $\left[\begin{matrix}
+      \sin(\alpha + \beta) & -\cos(\alpha + \beta) & (-l) \cos(\beta)
+    \end{matrix}\right]
+    R(\theta)\dot\xi_I
+    =
+    r \dot \varphi.$
+  \end{center}
+\end{minipage}
+
+\begin{minipage}{\columnwidth}
+  No-sliding constraint:
+  \vmspace
+  \begin{center}
+    $\left[\begin{matrix}
+      \cos(\alpha + \beta) & \sin(\alpha + \beta) & l \sin(\beta)
+    \end{matrix}\right]
+    R(\theta)\dot\xi_I
+    =
+    0.$
+  \end{center}
+\end{minipage}
+
+\begin{minipage}{\columnwidth}
+  Robot state:
+    $\xi_I
+    =
+    \left[\begin{matrix}
+      x & y & \theta
+    \end{matrix}\right]^\intercal,
+    \;\;
+    \dot\xi_R = R(\theta)\dot\xi_I,
+    \;\;
+    R(\theta) = \mathbf R_z^\intercal(\theta).$
+\end{minipage}
+
+\vpspace
+
+\begin{minipage}{\columnwidth}
+  Stacked equations of motion for a $(N_f+N_s)$-wheeled robot:
+  \vmspace
+  \begin{center}
+    $\begin{matrix}
+      \text{\textbf{(rolling)}}\;\;\;\;\;\; \\
+      \text{\textbf{(no-sliding)}}
+    \end{matrix}\;\;
+    \left[\begin{matrix}
+      J_1(\beta_s) \\
+      C_1(\beta_s)
+    \end{matrix}\right]
+    R(\theta)\dot\xi_I
+    =
+    \left[\begin{matrix}
+      J_2 \\
+      0
+    \end{matrix}\right]
+    \dot\varphi,\;\;\;\;
+    \dot\varphi
+    =
+    \left[\begin{matrix}
+      \varphi_1..\varphi_N
+    \end{matrix}\right],$
+  \end{center}
+\end{minipage}
+
+\begin{minipage}{\columnwidth}
+  with
+  \vmspace
+  \begin{center}
+    $J_1(\beta_s)
+    =
+    \left[\begin{matrix}
+      J_{1f} \\
+      J_{1s}(\beta_s)
+    \end{matrix}\right],
+    J_2
+    =
+    \mathrm{diag}(r_1..r_N),
+    C_1(\beta_s)
+    =
+    \left[\begin{matrix}
+      C_{1f} \\
+      C_{1s}(\beta_s)
+    \end{matrix}\right].$
+  \end{center}
+\end{minipage}
+
+\vpspace
+
+\begin{minipage}{\columnwidth}
+  A robot's \textbf{degree of maneuverability} $\varphi_M$ is
+  \vmspace
+  \begin{center}
+    $\delta_M = \delta_m + \delta_s$,
+  \end{center}
+  \vmspace
+  which is the sum of its \textbf{degree of mobility} $\varphi_m$ and its
+  \textbf{degree of steerability} $\varphi_s$:
+  \vmspace
+  \begin{center}
+    $\delta_m=\mathrm{dim}\,\mathrm{N}\left[C_1(\beta_s)\right] = 3 -
+    \mathrm{rank}\left[C_1(\beta_s)\right],\;
+    \varphi_s = \mathrm{rank}\left[C_{1s}(\beta_s)\right].$
+  \end{center}
+\end{minipage}
+
+\includegraphics[width=\columnwidth]{img/3_WheelTypes.png}
+
+\vmspace
+
+(Two robots with the same $\varphi_M$ may not be equivalent
+\textbf{instantaneously}.)
+
+\vtspace
+
+% TODO
+% Add if more space:
+% - differential kinematics
 
 \section{Perception I}
 
@@ -244,5 +387,4 @@
 
 \end{multicols}
 
-% -------------- End of Document ---------------------. 
 \end{document}
