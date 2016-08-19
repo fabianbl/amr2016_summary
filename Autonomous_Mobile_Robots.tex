@@ -77,19 +77,19 @@
   Equivalent \textbf{homogeneous transformation} description:
   \vmspace
   \begin{center}
-    $\left(\begin{matrix}
+    $\left[\begin{matrix}
       {}_I\mathbf{r}_{OP} \\
       1
-    \end{matrix}\right)
+    \end{matrix}\right]
     =
-    \left(\begin{matrix}
+    \left[\begin{matrix}
       \mathbf{R}_{IB} & {}_I\mathbf{r}_{OB} \\
       0 & 1
-    \end{matrix}\right)
-    \left(\begin{matrix}
+    \end{matrix}\right]
+    \left[\begin{matrix}
       {}_B\mathbf{r}_{BP} \\
       1
-    \end{matrix}\right)$
+    \end{matrix}\right]$
   \end{center}
 \end{minipage}
 
@@ -110,7 +110,7 @@
   \textbf{Differentiation} of moving frame vector:
   \vmspace
   \begin{center}
-    ${}_B\mathbf v_P = {}_B\left(\mathbf{\dot r}_{OP}\right) = \dfrac{\mathrm
+    ${}_B\mathbf v_P = {}_B\left[\mathbf{\dot r}_{OP}\right] = \dfrac{\mathrm
     d\, {}_B\mathbf r_{OP}}{\mathrm d \,t} + {}_B\omega_{IB} \times {}_B\mathbf
     r_{OP}$
   \end{center}
@@ -123,21 +123,21 @@
   R_z(\bullet)$:
   \vmspace
   \begin{center}
-    $\left(\begin{matrix}
+    $\left[\begin{matrix}
       1 & 0 & 0 \\
       0 & \cos & -\sin \\
       0 & \sin & \cos
-    \end{matrix}\right),\;
-    \left(\begin{matrix}
+    \end{matrix}\right],\;
+    \left[\begin{matrix}
       \cos & 0 & \sin \\
       0 & 1 & 0 \\
       -\sin & 0 & \cos
-    \end{matrix}\right),\;
-    \left(\begin{matrix}
+    \end{matrix}\right],\;
+    \left[\begin{matrix}
       \cos & -\sin & 0 \\
       \sin & \cos & 0 \\
       0 & 0 & 1
-    \end{matrix}\right).$
+    \end{matrix}\right].$
   \end{center}
 \end{minipage}
 
@@ -409,8 +409,8 @@ $S$ and wheel frame $W$:
   The PDF for a one-dimensional \textbf{Gaussian distribution}:
   \vmspace
   \begin{center}
-    $f(x) = \dfrac{1}{\sigma \sqrt{2\pi}}\,\mathrm{exp}\left[\dfrac{(x -
-    \sigma)^2}{2\sigma^2}\right].$
+    $f(x) = \dfrac{1}{\sigma \sqrt{2\pi}}\,\mathrm{exp}\left[-\dfrac{(x -
+    \mu)^2}{2\sigma^2}\right].$
   \end{center}
 \end{minipage}
 
@@ -502,6 +502,33 @@ $S$ and wheel frame $W$:
 \vpspace
 
 \begin{minipage}{\columnwidth}
+  \textbf{Radial distortion} model:
+  \vmspace
+  \begin{center}
+    $
+    \left[\begin{matrix}
+      u_{\mathrm d} \\
+      v_{\mathrm d}
+    \end{matrix}\right]
+    =
+    (1 + k_1 r^2)
+    \left[\begin{matrix}
+      u - u_0 \\
+      v - v_0
+    \end{matrix}\right]
+    +
+    \left[\begin{matrix}
+      u_0 \\
+      v_0
+    \end{matrix}\right],\;\;
+    r^2 = (u - u_0)^2 + (v - v_0)^2.
+    $
+  \end{center}
+\end{minipage}
+
+\vpspace
+
+\begin{minipage}{\columnwidth}
   For a \textbf{general perspective projection}, $P_W$ is given w.r.t. world
   frame $W$ and the transform from $W$ to $C$ is described by the
   \textbf{extrinsic parameters} $[R|T]$.
@@ -515,9 +542,17 @@ $S$ and wheel frame $W$:
       1
     \end{matrix}\right]
     =
+    K\left(R
+    \left[\begin{matrix}
+      X_W \\
+      Y_W \\
+      Z_W
+    \end{matrix}\right]
+    + T\right)
+    =
     \underbrace{
     K[R|T]
-    }_{\substack{\text{projection} \\ \text{matrix}\;P}}
+    }_{\substack{\text{camera} \\ \text{matrix}\;P}}
     \left[\begin{matrix}
       X_W \\
       Y_W \\
@@ -527,6 +562,8 @@ $S$ and wheel frame $W$:
     $
   \end{center}
 \end{minipage}
+
+% TODO: Check R, T.
 
 \vpspace
 
@@ -539,20 +576,166 @@ $S$ and wheel frame $W$:
     d = u_l - u_r\;(\text{disparity}).$
   \end{center}
 \end{minipage}
+\vpspace
+
+\begin{minipage}{\columnwidth}
+  Cross-product written with skew-symmetric matrix:
+  \vmspace
+  \begin{center}
+    $
+    \mathbf a \times \mathbf b = [\mathbf a_\times ] \mathbf b
+    =
+    \left[
+    \begin{matrix}
+      0 & -a_z & a_y \\
+      a_z & 0 & - a_x \\
+      -a_y & a_x & 0
+    \end{matrix}
+    \right]
+    \left[
+    \begin{matrix}
+      b_x \\
+      b_y \\
+      b_z
+    \end{matrix}
+    \right].
+    $
+  \end{center}
+\end{minipage}
 
 \vpspace
 
 \begin{minipage}{\columnwidth}
-  Epipolar constraint.
+  \textbf{Epipolar constraint} ($p_1, p_2$: normalized, homogeneous):
   \vmspace
+  \begin{center}
+    $p_2^\intercal E p_1 = 0,\;\; E = [T_\times]R\;\text{(essential matrix)}.$
+  \end{center}
+  \vspace{-18pt}
   \begin{center}
     \includegraphics[width=0.9\columnwidth]{img/5_EpipolarConstraint.png}
   \end{center}
 \end{minipage}
 
+\vtspace
+
 \section{Perception III}
 
-\blindtext[3]
+\vmspace
+
+\begin{minipage}{\columnwidth}
+  \textbf{Correlation} with a filter/kernel/mask $F$ of size $(2N+1)$ is
+  \vmspace
+  \begin{center}
+    $J(x) = F \circ I(x) = \sum_{i=-N}^N F(i) I(x + i)$,
+  \end{center}
+\end{minipage}
+
+\begin{minipage}{\columnwidth}
+  \textbf{Convolution} is correlation with a flippped filter:
+  \vmspace
+  \begin{center}
+    $J(x) = F \ast I(x) = \sum_{i=-N}^N F(i) I(x - i)$.
+  \end{center}
+  \vmspace
+  In contrast to correlation, convolution is associative.
+\end{minipage}
+
+\vpspace
+
+\begin{minipage}{\columnwidth}
+  \textbf{Linear filters} replace every pixel by a linear combination of its
+  neighbours. \textbf{Shift-invariant filters} perform the same operation on
+  every point of the image.
+\end{minipage}
+
+\vpspace
+
+\begin{minipage}{\columnwidth}
+  \textbf{Template matching} using \textbf{sum of squared differences}:
+  \vmspace
+  \vspace{-3pt}
+  \begin{equation*}
+    \begin{split}
+      \mathrm{SSD}(x) &= \mathsmaller\sum\nolimits_{i=-N}^N \left[ F(i) - I(x+i)
+      \right]^2,\\
+      &= \mathsmaller\sum \left[ F(i) \right]^2 +
+      \mathsmaller\sum \left[ I(x+i) \right]^2 -
+      2 \mathsmaller\sum \left[ F(i) I(x+i) \right].
+    \end{split}
+  \end{equation*}
+\end{minipage}
+
+\vpspace
+
+\begin{minipage}{\columnwidth}
+  \textbf{Sobel masks} as approximate derivate filers:
+  \vmspace
+  \begin{center}
+    $I_x =$
+    \begin{tabular}{|c|c|c|}\hline
+      -1 & 0 & 1 \\\hline
+      -2 & 0 & 2 \\\hline
+      -1 & 0 & 1 \\\hline
+    \end{tabular} ,
+    $\;\;I_x =$
+    \begin{tabular}{|c|c|c|}\hline
+      1 & 2 & 1 \\\hline
+      0 & 0 & 0 \\\hline
+      -1 & -2 & -1 \\\hline
+    \end{tabular} .
+  \end{center}
+\end{minipage}
+
+\vpspace
+
+\begin{minipage}{\columnwidth}
+  The \textbf{second order matrix} used by the \textbf{Harris corner detector}
+  (image patch size $P$):
+  \vmspace
+  \begin{center}
+    $M = \sum\limits_{x, y \in P}
+    \left[
+    \begin{matrix}
+      I_x^2 & I_x I_y \\
+      I_x I_y & I_y^2
+    \end{matrix}
+    \right],\;
+    \mathrm{SSD}(\Delta x, \Delta y)
+    \approx
+    \left[
+    \begin{matrix}
+      \Delta x\,\Delta y
+    \end{matrix}
+    \right]
+    M
+    \left[
+    \begin{matrix}
+      \Delta x \\
+      \Delta y
+    \end{matrix}
+    \right].
+    $
+  \end{center}
+  \vmspace
+  Evaluate it with the \textbf{cornerness function}
+  \vmspace
+  \begin{center}
+    $C = \lambda_1\lambda_2 - \kappa (\lambda_1 + \lambda_2)^2
+    = \mathrm{det}\,M - \kappa\,\mathrm{trace}^2 M.$
+  \end{center}
+\end{minipage}
+
+\vpspace
+
+\begin{minipage}{\columnwidth}
+  Main \textbf{SIFT} stages:
+  \begin{compactenum}
+  \item Extract keypoints and scale.
+  \item Assign keypoint orientation.
+  \item Generate keypoint descriptor.
+  \end{compactenum}
+\end{minipage}
 
 \section{Perception IV}
 
