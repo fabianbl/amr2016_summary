@@ -368,11 +368,12 @@ $S$ and wheel frame $W$:
             & struct. light, ToF \\
       Vision & CCD/CMOS & EC, P \\
       \bottomrule
+      \\[-10pt]
+      \multicolumn{3}{l}{(PC = \textbf{proprioceptive}, EC =
+      \textbf{exteroceptive},} \\
+      \multicolumn{3}{l}{A = active, P = passive)}
     \end{tabular}
   \end{center}
-  \vmspace
-  (PC = \textbf{proprioceptive}, EC = \textbf{exteroceptive}, A = active, P =
-  passive)
 \end{minipage}
 
 \vpspace
@@ -387,16 +388,167 @@ $S$ and wheel frame $W$:
   \end{center}
 \end{minipage}
 
+\vpspace
+
+\begin{minipage}{\columnwidth}
+  The \textbf{mean/expectation value} $\mathrm{E}[x] = \mu$ and the
+  \textbf{variance} $\mathrm{Var}[x] = \sigma^2$ of a \textbf{continuous random
+  variable} $x$ with \textbf{probability density function (PDF)} $f(x)$ are
+  computed as
+  \vmspace
+  \begin{center}
+    $\mu = \int_{-\infty}^{\infty}xf(x)\mathrm dx,\;\;
+    \sigma^2 = \int_{-\infty}^{\infty} = (x - \mu)^2 f(x)
+    \mathrm dx.$
+  \end{center}
+\end{minipage}
+
+\vpspace
+
+\begin{minipage}{\columnwidth}
+  The PDF for a one-dimensional \textbf{Gaussian distribution}:
+  \vmspace
+  \begin{center}
+    $f(x) = \dfrac{1}{\sigma \sqrt{2\pi}}\,\mathrm{exp}\left[\dfrac{(x -
+    \sigma)^2}{2\sigma^2}\right].$
+  \end{center}
+\end{minipage}
+
+\vpspace
+
+\begin{minipage}{\columnwidth}
+  The \textbf{error propagation law} describes the mapping from input covariance
+  $C_X$ to output covariance $C_Y$ using the Jacobian $F_X$ of the mapping
+  function $f(\bullet): \mathbb{R}^n \rightarrow \mathbb{R}^m$ w.r.t. $X$:
+  \vmspace
+  \begin{center}
+    $C_Y=F_XC_XF_X^\intercal\;\;\text{(linear approximation)}.$
+  \end{center}
+\end{minipage}
+
 % TODO:
 % - Error propagation law
 % - Phase shift of laser rangefinder
 % - Intro to Computer Vision / Human Vision
 
-
+\vtspace
 
 \section{Perception II}
 
-\blindtext[3]
+\vmspace
+
+\begin{minipage}{\columnwidth}
+  \textbf{Thin lens equation:} Voxel at depth $z$ will be \textbf{focused} on
+  the \textbf{focal plane} at distance $e$ behind the lens for a camera with
+  \textbf{focal length} $f$. If the \textbf{image plane} lies at $e \pm \delta$,
+  the voxel image will be a \textbf{blur cirlce} of radius $R$:
+  \vmspace
+  \begin{center}
+    $\dfrac{1}{f} = \dfrac{1}{z} + \dfrac{1}{e},\;\; R = \dfrac{L \delta}{2e}
+    \;\;
+    (L:\;\text{diameter of lens/aperture}).$
+  \end{center}
+\end{minipage}
+
+\vpspace
+
+\begin{minipage}{\columnwidth}
+  \textbf{Pinhole approximation:} $z \gg f$, therefore $e \approx f$ (lens is
+  approximated as pinhole at distance $f$ from image plane).
+\end{minipage}
+
+\vpspace
+
+\begin{minipage}{\columnwidth}
+  \textbf{Perspective projection:} A 3D-point $P_C=[X_C,Y_C,Z_C]^\intercal$ (in
+  camera frame $C$) projects
+  onto the image location $[u,v]^\intercal$ as
+  \vmspace
+  \begin{center}
+    $\left[\begin{matrix}
+      u \\
+      v
+    \end{matrix}\right]
+    =
+    \left[\begin{matrix}
+      \alpha_u\,X_C/Z_C + u_0 \\
+      \alpha_v\,Y_C/Z_C + v_0
+    \end{matrix}\right]\;\;/\;\;
+    \lambda
+    \left[\begin{matrix}
+      u \\
+      v \\
+      1
+    \end{matrix}\right]
+    =
+    \underbrace{\left[\begin{matrix}
+      \alpha_u & 0   & u_0 \\
+      0   & \alpha_v & v_0 \\
+      0   & 0   & 1
+    \end{matrix}\right]}_{\text{camera matrix}\; K}
+    \left[\begin{matrix}
+      X_C \\
+      Y_C \\
+      Z_C
+    \end{matrix}\right],
+    $
+  \end{center}
+  \vmspace with $[\alpha_u, \alpha_v] = f [k_u,k_v]$, using the inverse of the
+  effective pixel size $k_u$ ($k_v$) in $[\mathrm{pixel}/\mathrm{m}]$ and the
+  pixel coordinates of the \textbf{optical center} $[u_0,v_0]^\intercal$. $K$
+  contains the \textbf{intrinsic parameters}.
+\end{minipage}
+
+\vpspace
+
+\begin{minipage}{\columnwidth}
+  For a \textbf{general perspective projection}, $P_W$ is given w.r.t. world
+  frame $W$ and the transform from $W$ to $C$ is described by the
+  \textbf{extrinsic parameters} $[R|T]$.
+  \vmspace
+  \begin{center}
+    $
+    \lambda
+    \left[\begin{matrix}
+      u \\
+      v \\
+      1
+    \end{matrix}\right]
+    =
+    \underbrace{
+    K[R|T]
+    }_{\substack{\text{projection} \\ \text{matrix}\;P}}
+    \left[\begin{matrix}
+      X_W \\
+      Y_W \\
+      Z_W \\
+      1
+    \end{matrix}\right].
+    $
+  \end{center}
+\end{minipage}
+
+\vpspace
+
+\begin{minipage}{\columnwidth}
+  Basic stereo camera setup with \textbf{baseline} $b$ and focal lenght $f$, the
+  depth $Z$ for a point at left/right coordinate $[u_l,u_r]$ is
+  \vmspace
+  \begin{center}
+    $Z = bf/d,\;\;
+    d = u_l - u_r\;(\text{disparity}).$
+  \end{center}
+\end{minipage}
+
+\vpspace
+
+\begin{minipage}{\columnwidth}
+  Epipolar constraint.
+  \vmspace
+  \begin{center}
+    \includegraphics[width=0.9\columnwidth]{img/5_EpipolarConstraint.png}
+  \end{center}
+\end{minipage}
 
 \section{Perception III}
 
