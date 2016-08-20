@@ -14,6 +14,7 @@
 \setlength{\columnsep}{10mm}
 
 \newcommand{\vmspace}{\vspace{-7pt}}
+\newcommand{\vamspace}{\vspace{-3pt}}
 \newcommand{\vpspace}{\vspace{5pt}}
 \newcommand{\vtspace}{\vspace{-10pt}}
 
@@ -53,17 +54,8 @@
 \vmspace
 
 \begin{minipage}{\columnwidth}
-  To get from the inertial frame $I$ to body frame $B$:
-  \begin{compactitem}
-    \item \textbf{translate} with vector ${}_I\mathbf{r}_{OB}$,
-    \item \textbf{rotate} with matrix $\mathbf{R}_{IB}$.
-  \end{compactitem}
-\end{minipage}
-
-\vpspace
-
-\begin{minipage}{\columnwidth}
-  Express point $P$ which is given w.r.t frame $B$ in frame $I$:
+  Express point $P$ which is given w.r.t body frame $B$ in inertial frame $I$:
+  \vmspace
   \vmspace
   \begin{center}
   ${}_I\mathbf{r}_{OP} = {}_I\mathbf{r}_{OB} +
@@ -89,7 +81,10 @@
     \left[\begin{matrix}
       {}_B\mathbf{r}_{BP} \\
       1
-    \end{matrix}\right]$
+    \end{matrix}\right]
+    =
+    \mathbf{H}_{IB}\cdot{}_B\tilde{\mathbf r}_{BP}.
+    $
   \end{center}
 \end{minipage}
 
@@ -107,7 +102,7 @@
 \vpspace
 
 \begin{minipage}{\columnwidth}
-  \textbf{Differentiation} of moving frame vector:
+  Differentiation in moving frame (\textbf{Coriolis equation}):
   \vmspace
   \begin{center}
     ${}_B\mathbf v_P = {}_B\left[\mathbf{\dot r}_{OP}\right] = \dfrac{\mathrm
@@ -144,11 +139,25 @@
 \vpspace
 
 \begin{minipage}{\columnwidth}
-  \textbf{Jacobian} (partial derivative of position vector $\mathbf{r}_{OP}$
+  \textbf{Jacobian} (partial derivative of position vector $\mathbf{r}$
   w.r.t. \textbf{generalized coordinate} vector $\mathbf{q}$):
   \vmspace
   \begin{center}
-    $J_P = \dfrac{\partial \mathbf{r}_{OP}(\mathbf q)}{\partial \mathbf q}$.
+    $
+    \mathbf J
+    =
+    \dfrac{\partial \mathbf{r}(\mathbf q)}{\partial \mathbf q}
+    =
+    \left[
+    \begin{matrix}
+      \frac{\partial r_1}{\partial q_1} & \cdots & \frac{\partial r_1}{\partial
+      q_n} \\
+      \vdots & \ddots & \vdots \\
+      \frac{\partial r_m}{\partial q_1} & \cdots & \frac{\partial r_m}{\partial
+      q_n} \\
+    \end{matrix}
+    \right]
+    $.
   \end{center}
 \end{minipage}
 
@@ -174,8 +183,10 @@
 \begin{minipage}{\columnwidth}
   Iterative approach for \textbf{inverse kinematics} of robotic manipulator to
   find generalized coordinates for end-effector position $\mathbf r^\text{goal}$
-  (Newton's method):\\
-  \vmspace
+  (Newton's method):
+
+  \vamspace
+
   \begin{algorithm}[H]
     $\mathbf q = \mathbf q^0,\;\mathbf r = \mathbf r(\mathbf q)$\;
     \While{$\| \mathbf r - \mathbf r^\mathrm{goal} \| > \mathrm{threshold}$}
@@ -210,15 +221,34 @@
 \vmspace
 
 \begin{minipage}{\columnwidth}
-\textbf{Fixed/steered standard wheel} model with robot frame $R$, steering frame
-$S$ and wheel frame $W$:
-\vmspace
-\vmspace
-\begin{center}
-  \includegraphics[width=0.9\columnwidth]{img/3_Wheel.png}
-\end{center}
+  \textbf{General wheel equation} ($\mathbf v_{IR}, \omega_{IR}$: linear /
+  angular robot velocity, $\omega_{RS}$: steer rate, $\mathbf r_{SW}$: wheel
+  offset):
+  \vmspace
+  \begin{center}
+    $\mathbf v_{IW} = \mathbf v_{IR} + \omega_{IR} \times [\mathbf r_{RS} +
+    \mathbf r_{SW}] +
+    \omega_{RS} \times \mathbf r_{SW}.$
+  \end{center}
 \end{minipage}
 
+\vpspace
+
+\begin{minipage}{\columnwidth}
+  \textbf{Standard wheel equation} (no wheel offset $\mathbf r_{SW}$):
+  \vmspace
+  \begin{center}
+    $\mathbf v_{IW} = \mathbf v_{IR} + \omega_{IR} \times \mathbf r_{RS}.$
+  \end{center}
+\end{minipage}
+
+\vspace{3pt}
+
+\begin{minipage}{\columnwidth}
+  \includegraphics[width=\columnwidth]{img/3_WheelEquations.png}
+\end{minipage}
+
+\vspace{5pt}
 
 \begin{minipage}{\columnwidth}
   Rolling constraint:
@@ -329,13 +359,62 @@ $S$ and wheel frame $W$:
   \end{center}
 \end{minipage}
 
-\includegraphics[width=\columnwidth]{img/3_WheelTypes.png}
+\vpspace
 
-\vmspace
+\begin{minipage}{\columnwidth}
+  \includegraphics[width=\columnwidth]{img/3_WheelTypes.png}
+\end{minipage}
 
-(Two robots with the same $\varphi_M$ may not be equivalent
-\textbf{instantaneously}.)
-
+\begin{minipage}{\columnwidth}
+  Forward/inverse kinematics of a \textbf{differential drive robot}:
+  \vmspace
+  \begin{center}
+    $
+    \left[
+    \begin{matrix}
+      \dot x \\
+      \dot y \\
+      \dot \theta
+    \end{matrix}
+    \right]
+    =
+    \left[
+    \begin{matrix}
+      \frac{r}{2} & \frac{r}{2} \\
+      0 & 0 \\
+      \frac{r}{2b} & -\frac{r}{2b}
+    \end{matrix}
+    \right]
+    \left[
+    \begin{matrix}
+      \dot \varphi_l \\
+      \dot \varphi_r
+    \end{matrix}
+    \right]
+    \;\; / \;\;
+    \left[
+    \begin{matrix}
+      \dot \varphi_l \\
+      \dot \varphi_r
+    \end{matrix}
+    \right]
+    =
+    \left[
+    \begin{matrix}
+      \frac{1}{r} & 0 & \frac{b}{r} \\
+      \frac{1}{r} & 0 & -\frac{b}{r}
+    \end{matrix}
+    \right]
+    \left[
+    \begin{matrix}
+      \dot x \\
+      \dot y \\
+      \dot \theta
+    \end{matrix}
+    \right]
+    $.
+  \end{center}
+\end{minipage}
 
 % TODO
 % Add if more space:
@@ -485,7 +564,7 @@ $S$ and wheel frame $W$:
       \alpha_u & 0   & u_0 \\
       0   & \alpha_v & v_0 \\
       0   & 0   & 1
-    \end{matrix}\right]}_{\text{camera matrix}\; K}
+    \end{matrix}\right]}_{\text{calibr. matrix}\; K}
     \left[\begin{matrix}
       X_C \\
       Y_C \\
@@ -652,6 +731,50 @@ $S$ and wheel frame $W$:
 \vpspace
 
 \begin{minipage}{\columnwidth}
+  The \textbf{2D Gaussian kernel} is a \textbf{separable} filter (width
+  $\sigma$):
+  \vmspace
+  \begin{center}
+    $
+    G_\sigma = (x, y) = \frac{1}{2\pi\sigma^2}
+    \,\mathrm e^{-\frac{x^2 + y^2}{2 \sigma ^2}}
+    =
+    \underbrace{\tfrac{1}{\sigma \sqrt{2\pi}}
+    \,\mathrm e^{-\frac{-x^2}{2\sigma^2}}}_{g_\sigma(x)}
+    \cdot
+    \underbrace{\tfrac{1}{\sigma \sqrt{2\pi}}
+    \,\mathrm e^{-\frac{-y^2}{2\sigma^2}}}_{g_\sigma(y)}.
+    $
+  \end{center}
+\end{minipage}
+
+\vpspace
+
+\begin{minipage}{\columnwidth}
+  \textbf{Laplacian of Gaussian} (second derivative operator):
+  \vmspace
+  \begin{center}
+    $\mathrm{LoG} = \nabla^2 G_\sigma(x, y) = \frac{\partial^2 G_\sigma(x,
+    y)}{\partial x^2} + \frac{\partial^2 G_\sigma(x, y)}{\partial y^2}.
+    $
+  \end{center}
+\end{minipage}
+
+\vpspace
+
+\begin{minipage}{\columnwidth}
+  \textbf{Difference of Gaussian} is an approximation of LoG:
+  \vmspace
+  \begin{center}
+    $\mathrm{DoG} = G_{k\sigma}(x, y) - G_\sigma(x, y).
+    $
+  \end{center}
+\end{minipage}
+
+\vpspace
+
+
+\begin{minipage}{\columnwidth}
   \textbf{Template matching} using \textbf{sum of squared differences}:
   \vmspace
   \vspace{-3pt}
@@ -718,7 +841,7 @@ $S$ and wheel frame $W$:
     $
   \end{center}
   \vmspace
-  Evaluate it with the \textbf{cornerness function}
+  Corners: Local maxima in the \textbf{cornerness function}
   \vmspace
   \begin{center}
     $C = \lambda_1\lambda_2 - \kappa (\lambda_1 + \lambda_2)^2
@@ -729,41 +852,113 @@ $S$ and wheel frame $W$:
 \vpspace
 
 \begin{minipage}{\columnwidth}
-  Main \textbf{SIFT} stages:
-  \begin{compactenum}
-  \item Extract keypoints and scale.
-  \item Assign keypoint orientation.
-  \item Generate keypoint descriptor.
-  \end{compactenum}
+  Main \textbf{SIFT} stages: \\[-2pt]
+  \begin{minipage}{\columnwidth}
+    \begin{minipage}{0.5\columnwidth}
+      1. Extract keypoints + scale. \\
+      2. Assign keypoint orientation. \\
+      3. Generate descriptor ($4\cdot 4\cdot 8$). \\
+      $[$4. Matching ($L_2$ distance).$]$
+    \end{minipage}
+    \begin{minipage}{0.49\columnwidth}
+      \includegraphics[width=\columnwidth]{img/6_SIFT.png}
+    \end{minipage}
+  \end{minipage}
 \end{minipage}
+
+\vtspace
 
 \section{Perception IV}
 
-\blindtext[3]
+\vmspace
+
+\begin{minipage}{\columnwidth}
+  Vector quantization by \textbf{k-means clustering}, minimizes squared
+  Euclidean distance between points and their nearest cluster-centers:
+
+  \vamspace
+
+  \begin{algorithm}[H]
+    randomly initialize $k$ cluster centers\;
+    \While{not converged}
+    {
+      assign each vector to nearest center\;
+      re-compute cluster centers\;
+    }
+  \end{algorithm}
+\end{minipage}
+
+\vpspace
+
+\begin{minipage}{\columnwidth}
+  Robust model fitting with \textbf{RANSAC} (RANdom SAmple Consensus) to find a
+  point set free of outliers with probability $p$ with a known fraction of
+  inliers $w$:
+
+  \vamspace
+
+  \begin{algorithm}[H]
+    \For{$k \leftarrow 1$ \KwTo $\frac{\log(1-p)}{\log(1-w^2)}$}
+    {
+      randomly select minimal sample data points\;
+      calculate corresponding \textbf{model parameters}\;
+      calculate \textbf{error function} for each data point\;
+      select data that supports current hypothesis\;
+    }
+  \end{algorithm}
+\end{minipage}
+
+\vpspace
+
+\begin{minipage}{\columnwidth}
+  Line extraction using the \textbf{Hough transform}: Map point $(x, y)$ to
+  sinusoid in $(\theta, \rho)$ parameter space according to
+  \vmspace
+  \begin{center}
+    $x \cos \theta + y \sin \theta = \rho.$
+  \end{center}
+  \vspace{-25pt}
+  \begin{center}
+    \includegraphics[width=0.9\columnwidth]{img/7_Hough.png}
+  \end{center}
+\end{minipage}
+
+\vfill
 
 \section{Localization I}
 
 \blindtext[3]
 
+\vfill
+
 \section{Localization II}
 
 \blindtext[3]
+
+\vfill
 
 \section{SLAM I}
 
 \blindtext[3]
 
+\vfill
+
 \section{SLAM II}
 
 \blindtext[3]
+
+\vfill
 
 \section{Planning I}
 
 \blindtext[3]
 
+\vfill
+
 \section{Planning II}
 
 \blindtext[3]
+
 
 
 
