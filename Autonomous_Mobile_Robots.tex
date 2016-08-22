@@ -1133,7 +1133,7 @@
   \vamspace
 
   \begin{algorithm}[H]
-    \For{$\mathrm{all}$ $x_t$}
+    \For{\textnormal{\textbf{all}} $x_t$}
     {
     $
     \overline{bel}(x_t)
@@ -1238,10 +1238,40 @@
 
 \vfill
 
+\vtspace
+
 \section{Planning II}
 
-\blindtext[3]
+\vmspace
 
+
+\begin{minipage}{\columnwidth}
+  General \textbf{deterministic graph search} algorithm:
+
+  \vamspace
+
+  \begin{algorithm}[H]
+    Queue.init();
+    Queue.push(Start)\;
+    \While{\textnormal{Queue \textbf{is not} empty}}
+    {
+      Node curr = Queue.pop()\;
+      \textbf{if} curr \textbf{is} Goal \textbf{return}\;
+      Closed.push(curr);
+      Nodes next = expand(curr)\;
+      \For{\textnormal{\textbf{all} next \textbf{not in} Closed}}
+      {
+        Queue.push(next)\;
+      }
+    }
+  \end{algorithm}
+\end{minipage}
+
+\vpspace
+
+\begin{minipage}{\columnwidth}
+  \textbf{Breadth-first search} uses a FIFO queue.
+\end{minipage}
 
 
 
