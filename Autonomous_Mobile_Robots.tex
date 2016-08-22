@@ -140,8 +140,8 @@
 \vpspace
 
 \begin{minipage}{\columnwidth}
-  \textbf{Jacobian} (partial derivative of position vector $\mathbf{r}$
-  w.r.t. \textbf{generalized coordinate} vector $\mathbf{q}$):
+  \textbf{Jacobian} (partial derivative of position vector $\mathbf{r}(\mathbf
+  q)$ w.r.t. \textbf{generalized coordinate} vector $\mathbf{q}$):
   \vmspace
   \begin{center}
     $
@@ -388,15 +388,15 @@
     \right]
     \left[
     \begin{matrix}
-      \dot \varphi_l \\
-      \dot \varphi_r
+      \dot \varphi_r \\
+      \dot \varphi_l
     \end{matrix}
     \right]
     \;\; / \;\;
     \left[
     \begin{matrix}
-      \dot \varphi_l \\
-      \dot \varphi_r
+      \dot \varphi_r \\
+      \dot \varphi_l
     \end{matrix}
     \right]
     =
@@ -489,7 +489,11 @@
   The PDF for a one-dimensional \textbf{Gaussian distribution}:
   \vmspace
   \begin{center}
-    $p(x) = \dfrac{1}{\sigma \sqrt{2\pi}}\,\mathrm{exp}\left[-\dfrac{(x -
+    $p(x)
+    =
+    \mathcal N (\mu, \sigma^2)
+    =
+    \dfrac{1}{\sigma \sqrt{2\pi}}\,\mathrm{exp}\left[-\dfrac{(x -
     \mu)^2}{2\sigma^2}\right].$
   \end{center}
 \end{minipage}
@@ -926,6 +930,9 @@
 
 \vspace{7cm}
 
+% TODO:
+% -line fitting algorithms
+
 \vfill
 
 
@@ -967,8 +974,8 @@
 \vpspace
 
 \begin{minipage}{\columnwidth}
-  \textbf{Multivariate Gaussian distribution} for dimension $k$ with covariance
-  matrix $\Sigma$ (positive semidefinite, symmetric):
+  \textbf{Multivariate Gaussian distribution} $\mathcal N(\mu, \Sigma)$ for
+  dimension $k$ with (symmetric) covariance matrix $\Sigma$:
   \vmspace
   \begin{center}
     $
@@ -985,13 +992,59 @@
 \vpspace
 
 \begin{minipage}{\columnwidth}
+  \textbf{Combination of GRVs:} Let $y=Ax_1 + Bx_2$ be a linear function of
+  $x_i=\mathcal N(\mu_i, \Sigma_i)$. Then, $p(y)$ is
+  \vmspace
+  \begin{center}
+    $
+    p(y) = \mathcal N (A\mu_1 + B\mu_2,\,
+    A\Sigma_1A^\intercal + B\Sigma_2B^\intercal).
+    $
+  \end{center}
+  \vmspace
+  If $y=f(x_1,x_2)$ is non-linear, approximate $y$ and $p(y)$ as
+  \vmspace
+  \begin{center}
+    $
+    y \approx f(\mu_1, \mu_2) + F_{x_1} (x_1 - \mu_1) + F_{x_2}(x_2 -
+    \mu_2),\;\;$\\
+    $p(y) \approx \mathcal N(f(\mu_1, \mu_2),\,
+    F_{x_1}\Sigma_1{F_{x_1}}^\intercal +
+    F_{x_2}\Sigma_2{F_{x_2}}^\intercal).
+    $
+  \end{center}
+\end{minipage}
+
+\vpspace
+
+\begin{minipage}{\columnwidth}
+  A robot's \textbf{belief} about its state $x_t$ before/after measurement $z_t$
+  is represented as probability distribution:
+  \vmspace
+  \begin{center}
+    $
+    \overline{bel}(x_t)
+    =
+    p(x_t | z_{1 \rightarrow t-1}, u_{1 \rightarrow t}),\;\;
+    bel(x_t)
+    =
+    p(x_t | z_{1 \rightarrow t}, u_{1 \rightarrow t}).
+    $
+  \end{center}
+\end{minipage}
+
+\vpspace
+
+\begin{minipage}{\columnwidth}
   Ingredients of probabilistic \textbf{map-based localization}:
   \begin{compactenum}
   \item The initial probability distribution $bel(x_0)$.
   \item \textit{True} \textbf{map} $M = \{m_0\cdots m_n\}$ of the environment.
   \item Data: $u_t$ (proprioceptive, control), $z_t$ (exteroceptive).
-  \item Probabilistic motion model: $x_t = f(x_{t-1}, u_t)$.
-  \item Probabilistic measurement model: $z_t = h(x_t, M)$.
+  \item Probabilistic \textbf{motion model} $p(x_t|u_t, x_{t-1})$, e.g. based on
+    noise-free model $x_t = f(x_{t-1}, u_t)$.
+  \item Probabilistic \textbf{measurement model} $p(z_t|x_t,M)$, e.g. based on
+    noise-free model $z_t = h(x_t, M)$.
   \end{compactenum}
 \end{minipage}
 
@@ -1000,30 +1053,55 @@
 \begin{minipage}{\columnwidth}
   Classification of localization problems:
   \begin{compactitem}
-  \item \textbf{Position tracking:} $bel(x_0)$ is \textbf{Diract delta}
+  \item \textbf{Position tracking:} $bel(x_0)$ is \textbf{Dirac delta}
     function.
   \item \textbf{Global localization:} Uniform distribution for $bel(x_0))$.
   \item \textbf{Kidnapped robot problem:} Does the robot realize?
   \end{compactitem}
 \end{minipage}
 
-\begin{minipage}{\columnwidth}
-  \includegraphics[width=\columnwidth]{img/8_ActSee.png}
-
-  \vspace{-4pt}
-
-  \begin{compactenum}
-  \item \textbf{ACT:} Motion estimated by odometry ($x_3$).
-  \item \textbf{SEE:} Observation of landmark with uncertainty ($x_3^\prime$).
-  \item \textbf{Belief update:} Information fusion ($x_3^{\prime\prime}$).
-  \end{compactenum}
-\end{minipage}
-
 \vpspace
 
+\begin{minipage}{\columnwidth}
+  \begin{tabular}{p{0.44\columnwidth}p{0.44\columnwidth}}
+    Architecture map:\newline
+
+    \vspace{-20pt}
+
+    \begin{center}
+      \includegraphics[width=0.28\columnwidth]{img/8_Architecture.png}
+    \end{center}
+    & Exact cell decomposition:\newline
+
+    \vspace{-20pt}
+
+    \begin{center}
+      \includegraphics[width=0.29\columnwidth]{img/8_Exact.png}
+    \end{center}
+    \\[-12pt]
+    Approx. decomposition:\newline
+
+    \vspace{-20pt}
+
+    \begin{center}
+      \includegraphics[width=0.29\columnwidth]{img/8_Approx.png}
+    \end{center}
+    & Topological:\newline
+
+    \vspace{-20pt}
+
+    \begin{center}
+      \includegraphics[width=0.38\columnwidth]{img/8_Topological.png}
+    \end{center}
+
+
+    \\[-15pt]
+  \end{tabular}
+\end{minipage}
 
 % TODO
 % - Odometry uncertainty
+% - measurement / motion model with uncertainty
 
 \vfill
 
@@ -1040,9 +1118,7 @@
   \vmspace
   \begin{center}
     $
-    bel(x_t)
-    =
-    p(x_t|x_0, u_t \cdots u_0, z_t \cdots z_0)
+    p(x_t|x_0, u_0 \cdots u_t, z_0 \cdots z_t)
     =
     p(x_t|x_{t-1}, u_t, z_t).
     $
@@ -1052,7 +1128,7 @@
 \vpspace
 
 \begin{minipage}{\columnwidth}
-  Algorithm for \textbf{Markov localization}, based on map $M$:
+  The general algorithm for \textbf{Markov localization}:
 
   \vamspace
 
@@ -1082,6 +1158,65 @@
 \vpspace
 
 
+\begin{minipage}{\columnwidth}
+  \textbf{Kalman filter localization} assumes
+  $bel(x_t) = \mathcal N (x_t, P_t).  $\\
+  S1) The \textbf{prediction update} is ($Q_t$: covariance of motion model
+  noise, $F_{x/u}$: jacobian w.r.t. $x$/$u$):
+  \vmspace
+  \begin{center}
+    $
+    \hat x_t = f(x_{t-1}, u_t),\;\;
+    \hat P_t = F_x P_{t-1} F_x^\intercal + F_u Q_t F_u^\intercal.
+    $
+  \end{center}
+  \vmspace
+  S2) The \textbf{measurement update} consists of four steps:
+  \begin{compactenum}
+  \item \textit{Observation}: Obtain $z_t^i$ with
+    covariance $R_t^i$ ($i=1..n$).
+  \item \textit{Measurement prediction}: Predict $\hat z_t^j = h^j(\hat x_t, m^j)$,
+    compute its jacobian $H^j$ w.r.t $\hat x_t$.
+  \item \textit{Matching step}: Compute the \textbf{innovation}
+    (\textbf{covariance})
+
+    \begin{center}
+      $
+      v_t^{ij}=[z_t^i - z_t^j],\;\;
+      \Sigma_{IN_t}^{ij} = H^j \hat P_t {H^j}^\intercal + R_t^i,
+      $
+    \end{center}
+
+    Find matches with a \textbf{validation gate} $g$, e.g. Mahalanobis distance:
+    ${v_t^{ij}}^\intercal (\Sigma_{IN_t}^{ij})^{-1} v_t^{ij} \le g^2$.
+
+  \item \textit{Estimation step}: Stack validated observations into $z_t$, corresponding
+    innovations into $v_t$, measurement jacobians into $H_t$ and
+    $R_t = \mathrm{diag}(R_t^i)$, compute $\Sigma_{IN_t}$. Update the robot's
+    state estimate as
+
+    \begin{center}
+      $
+      x_t = \hat x_t + K_t v_t,\;\;
+      P_t = \hat P_t - K_t \Sigma_{IN_t}K_t^\intercal,
+      $
+    \end{center}
+
+    with the \textbf{Kalman gain}
+
+    \begin{center}
+      $
+      K_t = \hat P_t H_t^\intercal (\Sigma_{IN_t})^{-1}.
+      $
+    \end{center}
+
+  \end{compactenum}
+  \includegraphics[width=\columnwidth]{img/9_Kalman.png}
+\end{minipage}
+
+% TODO:
+% - check topological approach with Markov from book
+% - performance enhancements for Markov (randomized sampling)
 
 \vfill
 
