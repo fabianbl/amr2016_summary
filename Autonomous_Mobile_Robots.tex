@@ -7,7 +7,7 @@
 \usepackage{graphicx}
 \usepackage{blindtext}
 \usepackage{paralist}
-\usepackage[boxed]{algorithm2e}
+\usepackage[boxed, vlined]{algorithm2e}
 \usepackage{booktabs}
 
 \setlength\parindent{0ex}
@@ -189,6 +189,7 @@
   \vamspace
 
   \begin{algorithm}[H]
+    \DontPrintSemicolon
     $\mathbf q = \mathbf q^0,\;\mathbf r = \mathbf r(\mathbf q)$\;
     \While{$\| \mathbf r - \mathbf r^\mathrm{goal} \| > \mathrm{threshold}$}
     {
@@ -884,6 +885,7 @@
   \vamspace
 
   \begin{algorithm}[H]
+    \DontPrintSemicolon
     randomly initialize $k$ cluster centers\;
     \While{not converged}
     {
@@ -903,6 +905,7 @@
   \vamspace
 
   \begin{algorithm}[H]
+    \DontPrintSemicolon
     \For{$k \leftarrow 1$ \KwTo $\frac{\log(1-p)}{\log(1-w^2)}$}
     {
       randomly select minimal sample data points\;
@@ -1133,6 +1136,7 @@
   \vamspace
 
   \begin{algorithm}[H]
+    \DontPrintSemicolon
     \For{\textnormal{\textbf{all}} $x_t$}
     {
     $
@@ -1234,7 +1238,63 @@
 
 \section{Planning I}
 
-\blindtext[3]
+\begin{minipage}{\columnwidth}
+  Dynamic window approach (DWA).
+\end{minipage}
+
+\vpspace
+
+\begin{minipage}{\columnwidth}
+  Velocity obstacles (VO).
+  \vmspace
+  \begin{center}
+    $
+    || \mathbf p_{RO} + \mathbf v_R t || < r_R + r_O,\;\;
+    \mathrm{VO}_{RO}^\tau = \bigcup\limits_{0 \le t \le \tau}
+    D\left(-\frac{\mathbf p_{RO}}{t}, \frac{r_{RO}}{t}\right).
+    $
+  \end{center}
+  \vspace{-18pt}
+  \includegraphics[width=\columnwidth]{img/12_VelocityObstacles.png}
+\end{minipage}
+
+\vpspace
+
+\begin{minipage}{\columnwidth}
+  Reciprocal Velocity obstacles.
+\end{minipage}
+
+\vpspace
+
+\begin{minipage}{\columnwidth}
+  Local potential fields.
+  \vmspace
+  \begin{center}
+    $
+    U_\mathrm{att}(\mathbf q)
+    =
+    \frac{1}{2} k_\mathrm{att}(\mathbf q - \mathbf q_\mathrm{goal})^2,\;\;
+    U_\mathrm{rep}(\mathbf q)
+    =
+    \frac{1}{2} k_\mathrm{rep} (\frac{1}{\rho(\mathbf q)}
+    - \frac{1}{\rho_\mathrm{lim}})^2
+    .
+    $
+  \end{center}
+\end{minipage}
+
+\vpspace
+
+\begin{minipage}{\columnwidth}
+  Harmonic potential fields.
+  \vmspace
+  \begin{center}
+    $
+    \bigtriangleup U = \sum \frac{\partial^2 U}{\partial q_i^2}.
+    $
+  \end{center}
+\end{minipage}
+
 
 \vfill
 
@@ -1244,6 +1304,18 @@
 
 \vmspace
 
+\begin{minipage}{\columnwidth}
+  \textbf{Road map approaches} for construction of graph $G(N,E)$ with nodes $N$
+  and edges $E$:
+  \begin{compactitem}
+  \item \textbf{Visibility graph:} Connect nodes (obstacle corners) that
+    see each other. Optimal solutions w.r.t path length.
+  \item \textbf{Voronoi diagram:} Evaluate equidistant paths to obstacles,
+    workspace needs to be closed.
+  \end{compactitem}
+\end{minipage}
+
+\vpspace
 
 \begin{minipage}{\columnwidth}
   General \textbf{deterministic graph search} algorithm:
@@ -1251,7 +1323,8 @@
   \vamspace
 
   \begin{algorithm}[H]
-    Queue.init();
+    \DontPrintSemicolon
+    Queue.init(),
     Queue.push(Start)\;
     \While{\textnormal{Queue \textbf{is not} empty}}
     {
@@ -1267,10 +1340,75 @@
   \end{algorithm}
 \end{minipage}
 
+\begin{minipage}{\columnwidth}
+  Total expected cost from start to goal via node $N$:
+  \vmspace
+  \begin{center}
+    $f(N) = \underbrace{g(N)}_{\substack{\text{cost} \\
+    \text{from start}}}
+    + \varepsilon\cdot\underbrace{h(N)}_{\substack{
+    \text{heuristic} \\ \text{cost-to-go}
+    }
+    }.$
+  \end{center}
+\end{minipage}
+
+\vmspace
+
+\begin{minipage}{\columnwidth}
+  \textit{Examples:}\\
+  1) \textbf{Breadth-first search}: FIFO queue, solution optimal for uniform edge
+  costs, complexity: $\mathcal O (|N| + |E|)$.
+
+  2) \textbf{Depth-first search}: LIFO queue, solution not optimal.
+
+  2) \textbf{Dijkstra's search}: ordering according to $f(N)$ with $\varepsilon
+  = 0$, complexity: $\mathcal O (|N|\log |N| + |E|)$.
+
+  3) \textbf{A* algorithm}: extension of Dijkstra with $\varepsilon=1$. Possible
+  heuristic $h(N)$: Euclidean distance to goal (underestimation).
+
+  4) \textbf{D* algorithm}: incremental replanning version of A*.
+\end{minipage}
+
 \vpspace
 
 \begin{minipage}{\columnwidth}
-  \textbf{Breadth-first search} uses a FIFO queue.
+  \textbf{Binary min-heap}: Top node has minimum value.
+  \begin{compactitem}
+  \item \textit{Push()}: Insert new node $N$ at end of heap. While $N <
+    \mathrm{parent}(N)$, swap $N$ and $\mathrm{parent}(N)$.
+  \item \textit{Pop()}: Return top element of heap. Move bottom node $N$ to top.
+    While $N < \mathrm{min}(\mathrm{child}(N))$, swap these nodes.
+  \end{compactitem}
+\end{minipage}
+
+\vpspace
+
+\begin{minipage}{\columnwidth}
+  \textbf{Rapidly exploring random tree (RRT)} algorithm as an example of a
+  randomized graph search method:
+
+  \vamspace
+
+  \begin{algorithm}[H]
+    \DontPrintSemicolon
+    \SetKwFor{For}{try}{}{}
+    Graph.init(Start)\;
+    \While{\textnormal{Graph.size() \textbf{is less than} threshold}}
+    {
+      Node rand = \textbf{rand()}\;
+      Node near = Graph.nearest(rand)\;
+      \For{}
+      {
+        Node new = Sys.propagate(near, rand)\;
+        Graph.addNode(new)\;
+        Graph.addEdge(near, new)\;
+      }
+    }
+  \end{algorithm}
+
+
 \end{minipage}
 
 
