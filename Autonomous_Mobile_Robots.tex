@@ -526,7 +526,7 @@
   \textbf{Thin lens equation:} Voxel at depth $z$ will be \textbf{focused} on
   the \textbf{focal plane} at distance $e$ behind the lens for a camera with
   \textbf{focal length} $f$. If the \textbf{image plane} lies at $e \pm \delta$,
-  the voxel image will be a \textbf{blur cirlce} of radius $R$:
+  the voxel image will be a \textbf{blur circle} of radius $R$:
   \vmspace
   \begin{center}
     $\dfrac{1}{f} = \dfrac{1}{z} + \dfrac{1}{e},\;\; R = \dfrac{L \delta}{2e}
@@ -653,7 +653,7 @@
 \vpspace
 
 \begin{minipage}{\columnwidth}
-  Basic stereo camera setup with \textbf{baseline} $b$ and focal lenght $f$, the
+  Basic stereo camera setup with \textbf{baseline} $b$ and focal length $f$, the
   depth $Z$ for a point at left/right coordinate $[u_l,u_r]$ is
   \vmspace
   \begin{center}
@@ -702,6 +702,8 @@
   \end{center}
 \end{minipage}
 
+\vfill
+
 \vtspace
 
 \section{Perception III}
@@ -717,7 +719,7 @@
 \end{minipage}
 
 \begin{minipage}{\columnwidth}
-  \textbf{Convolution} is correlation with a flippped filter:
+  \textbf{Convolution} is correlation with a flipped filter:
   \vmspace
   \begin{center}
     $J(x) = F \ast I(x) = \sum_{i=-N}^N F(i) I(x - i)$.
@@ -730,7 +732,7 @@
 
 \begin{minipage}{\columnwidth}
   \textbf{Linear filters} replace every pixel by a linear combination of its
-  neighbours. \textbf{Shift-invariant filters} perform the same operation on
+  neighbors. \textbf{Shift-invariant filters} perform the same operation on
   every point of the image.
 \end{minipage}
 
@@ -798,7 +800,7 @@
 \vpspace
 
 \begin{minipage}{\columnwidth}
-  \textbf{Sobel masks} as approximate derivate filers:
+  \textbf{Sobel masks} as approximate derivative filers:
   \vmspace
   \begin{center}
     $I_x =$
@@ -871,6 +873,8 @@
     \end{minipage}
   \end{minipage}
 \end{minipage}
+
+\vfill
 
 \vtspace
 
@@ -1224,34 +1228,79 @@
 
 \vfill
 
+\vtspace
+
 \section{SLAM I}
+
+\vmspace
 
 \blindtext[3]
 
 \vfill
+
+\vtspace
 
 \section{SLAM II}
 
+\vmspace
+
 \blindtext[3]
 
 \vfill
 
+\vtspace
+
 \section{Planning I}
 
+\vmspace
+
 \begin{minipage}{\columnwidth}
-  Dynamic window approach (DWA).
+  \textbf{Dynamic window approach (DWA):} Acts in input space $(v,\omega)$. Set
+  of admissible velocities within next time frame is
+  \vmspace
+  \begin{center}
+    $
+    V_r =
+    \underbrace{V_o}_{\substack{\text{grid, obstacles} \\ \text{(in
+    input-space)}}}
+    \cap \underbrace{V_s}_{\substack{\text{static window} \\ \text{(motor
+    limits etc.)}}}
+    \cap \underbrace{V_d}_{\substack{\text{dynamic window} \\ \text{(feasible
+    within next frame)}}}
+    .
+    $
+  \end{center}
+  \vmspace
+  Maximize $(v,\omega)\in V_r$, subject to (local) objective function\\
+  \vmspace
+  \begin{minipage}{0.4\columnwidth}
+    \vspace{-18pt}
+    \begin{equation*}
+      \begin{split}
+        O =& a\cdot\mathrm{heading}(v,\omega)\\
+        &+ b\cdot\mathrm{velocity}(v,\omega)\\
+        &+ c\cdot \mathrm{obst\_dist}(v,\omega).
+      \end{split}
+    \end{equation*}
+  \end{minipage}
+  \begin{minipage}{0.59\columnwidth}
+  \includegraphics[width=\columnwidth]{img/12_DynamicWindow.png}
+  \end{minipage}
 \end{minipage}
 
 \vpspace
+\vpspace
 
 \begin{minipage}{\columnwidth}
-  Velocity obstacles (VO).
+  \textbf{Velocity obstacles (VO):} 1) Compute set of colliding velocities. 2)
+  Restrict to set of colliding velocities within time horizon $\tau$. 3) Shift
+  VO by instantaneous obstacle velocity.
   \vmspace
   \begin{center}
     $
     || \mathbf p_{RO} + \mathbf v_R t || < r_R + r_O,\;\;
     \mathrm{VO}_{RO}^\tau = \bigcup\limits_{0 \le t \le \tau}
-    D\left(-\frac{\mathbf p_{RO}}{t}, \frac{r_{RO}}{t}\right).
+    \mathrm{Disks}\left(-\frac{\mathbf p_{RO}}{t}, \frac{r_{RO}}{t}\right).
     $
   \end{center}
   \vspace{-18pt}
@@ -1261,13 +1310,18 @@
 \vpspace
 
 \begin{minipage}{\columnwidth}
-  Reciprocal Velocity obstacles.
+  Interactive collision avoidance for multiple decision-making agents without
+  explicit communication, using a fairness property: \textbf{reciprocal velocity
+  obstacles}.
 \end{minipage}
 
 \vpspace
 
 \begin{minipage}{\columnwidth}
-  Local potential fields.
+  \textbf{Local potential fields:} Robot (position $\mathbf q$) follows gradient
+  of potential field. Potential attractive at goal, repulsive at obstacles
+  ($U_\mathrm{rep} = 0$ if distance to obstacle $\rho(\mathbf q) >
+  \rho_\mathrm{lim}$):
   \vmspace
   \begin{center}
     $
@@ -1286,15 +1340,48 @@
 \vpspace
 
 \begin{minipage}{\columnwidth}
-  Harmonic potential fields.
+  \textbf{Harmonic potential fields:} Iteratively solve the \textbf{Laplace
+  equation}
+  $
+  \bigtriangleup U = \sum \frac{\partial^2 U}{\partial q_i^2} = 0
+  $ with the approximation
+  $
+  \nabla U(\mathbf q)_i
+  \approx
+  [U(\mathbf q + \delta e_i) - U(\mathbf q)]/\delta
+  $
+  as
   \vmspace
   \begin{center}
     $
-    \bigtriangleup U = \sum \frac{\partial^2 U}{\partial q_i^2}.
+    U^{k+1}(\mathbf q)
+    =
+    \frac{1}{2n} \sum_{i=1}^n(U^k(\mathbf q + \delta \mathbf e_i)
+    + U^k(\mathbf q - \delta \mathbf e_i)),
     $
   \end{center}
+  \vmspace
+  with a mixture of the following boundary conditions concerning the obstacle
+  boundaries:
+  \begin{compactitem}
+  \item \textbf{Neumann:} Equipotential lines orthogonal.
+  \item \textbf{Dirichlet:} Constant potential.
+  \end{compactitem}
 \end{minipage}
 
+\vpspace
+
+\begin{minipage}{\columnwidth}
+  \textit{Additional obstacle avoidance examples:}
+  \begin{compactitem}
+  \item \textbf{Bug algorithm:} Follow the boundary of an obstacle, depart from
+    point of shortest distance to the goal.
+  \item \textbf{Vector field histogram (VHF):} Use polar histogram showing
+    probability of obstacle occurence.
+  \item \textbf{Bubble band technique:} Compute bubbles representing max.
+    free space around given robot configuration.
+  \end{compactitem}
+\end{minipage}
 
 \vfill
 
@@ -1344,8 +1431,8 @@
   Total expected cost from start to goal via node $N$:
   \vmspace
   \begin{center}
-    $f(N) = \underbrace{g(N)}_{\substack{\text{cost} \\
-    \text{from start}}}
+    $f(N) = \underbrace{g(N)}_{\substack{\text{cost so far} \\
+    \text{(from start)}}}
     + \varepsilon\cdot\underbrace{h(N)}_{\substack{
     \text{heuristic} \\ \text{cost-to-go}
     }
@@ -1357,8 +1444,8 @@
 
 \begin{minipage}{\columnwidth}
   \textit{Examples:}\\
-  1) \textbf{Breadth-first search}: FIFO queue, solution optimal for uniform edge
-  costs, complexity: $\mathcal O (|N| + |E|)$.
+  1) \textbf{Breadth-first search}: FIFO queue, solution optimal for uniform
+  edge costs, complexity: $\mathcal O (|N| + |E|)$.
 
   2) \textbf{Depth-first search}: LIFO queue, solution not optimal.
 
@@ -1376,7 +1463,7 @@
 \begin{minipage}{\columnwidth}
   \textbf{Binary min-heap}: Top node has minimum value.
   \begin{compactitem}
-  \item \textit{Push()}: Insert new node $N$ at end of heap. While $N <
+  \item \textit{Push($N$)}: Insert new node $N$ at end of heap. While $N <
     \mathrm{parent}(N)$, swap $N$ and $\mathrm{parent}(N)$.
   \item \textit{Pop()}: Return top element of heap. Move bottom node $N$ to top.
     While $N < \mathrm{min}(\mathrm{child}(N))$, swap these nodes.
