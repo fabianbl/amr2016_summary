@@ -1278,7 +1278,7 @@
   \item \textbf{Photogrammetry:} Use (aerial) photographs to make measurements
     between points, recover exact positions.
   \item \textbf{Structure from Motion (SfM):} Estimate 3D structure from a
-    sequence of images, bundle adjustement.
+    sequence of images.
   \end{compactitem}
 \end{minipage}
 
@@ -1290,11 +1290,11 @@
   \textbf{Full SLAM:} Given the the landmark observations $  \{z_0..z_k\}$ and
   the control inputs $\{u_0..u_t\}$, estimate the joint posterior
   probability over the robot path $\{x_0..x_t\}$ and the \textit{true} map
-  $\{m_0..m_{n}\}$ , i.e. find
+  $\{m_0..m_{n-1}\}$ , i.e. find
   \vmspace
   \begin{center}
     $
-    p(x_{0:t}, m_{0:n}| z_{0:k}, u_{0:t}).
+    p(x_{0:t}, m_{0:n-1}| z_{0:k}, u_{0:t}).
     $
   \end{center}
 \end{minipage}
@@ -1307,9 +1307,106 @@
   \vmspace
   \begin{center}
     $
-    p(x_{t}, m_{0:n}| z_{0:k}, u_{0:t}).
+    p(x_{t}, m_{0:n-1}| z_{0:k}, u_{0:t}).
     $
   \end{center}
+\end{minipage}
+
+\begin{minipage}{\columnwidth}
+  \textit{Approaches:}\\
+  1) \textbf{Full graph optimization} (bundle adjustment): Eliminate
+  observations and control inputs, solve for constraints between poses and
+  landmarks. Sparsify graph for real-time application.
+\end{minipage}
+
+\begin{minipage}{\columnwidth}
+  2) \textbf{Key frames:} Retain most representative poses and their dependency
+  links, optimize resulting graph (e.g. PTAM).
+\end{minipage}
+
+\begin{minipage}{\columnwidth}
+  3) \textbf{Filtering:} Summarize all experience w.r.t. last pose with state
+  vector and covariance matrix (e.g. MonoSLAM).
+\end{minipage}
+
+\vpspace
+
+\begin{minipage}{\columnwidth}
+  \textbf{EKF SLAM} summarizes past experience in an extended state vector $y_t$
+  and a corresponding covariance $P_{y_t}$:
+  \vmspace
+  \begin{center}
+    $
+    y_t
+    =
+    \left[
+    \begin{matrix}
+      x_t \\
+      m_1 \\
+      \cdots \\
+      m_{n-1}
+    \end{matrix}
+    \right],\;\;
+    P_{y_t}
+    =
+    \left[
+    \begin{matrix}
+      P_{xx} & \cdots & P_{xm_{n-1}} \\
+      \vdots & \ddots & \vdots \\
+      P_{m_{n-1}x} & \cdots & P_{m_{n-1}m_{n-1}} \\
+    \end{matrix}
+    \right]
+    $.
+  \end{center}
+  \vmspace
+  S1) Prediction according to EKF equations:
+  \vmspace
+  \begin{center}
+    $
+    \hat y_t
+    =
+    \left[
+    \begin{matrix}
+      \hat x_t \\
+      m_i
+    \end{matrix}
+    \right]
+    =
+    \left[
+    \begin{matrix}
+      f(x_{t-1}, u_t) \\
+      \mathbf 0
+    \end{matrix}
+    \right],\;\;
+    \hat P_{y_t}
+    =
+    F_yP_{y_{t-1}}F_y^\intercal + F_uQ_tF_u^\intercal.
+    $
+  \end{center}
+  \vmspace
+  S2) Measurement model $\hat z_i=h^i(\hat x_t, m_i)$ as in EKF localization.
+  Update the state with actual observations $z_{0:n-1}$:
+  \vmspace
+  \begin{center}
+    $
+    y_t
+    =
+    \hat y_t + K_t v_t,\;
+    P_{y_t} = \hat P_{y_t} - K_t\Sigma_{IN}K_t^\intercal$,\\
+    $
+    v_t=z_{0:n-1} - h_{0:n-1}(\hat x_t, m_{0:n-1}),\;
+    \Sigma_{IN} = H\hat P_{y_t}H^\intercal + R,\;
+    $
+  \end{center}
+  \vmspace
+  using the Kalman gain $K_t = \hat P_{y_t}H(\Sigma_{IN})^{-1}$.
+\end{minipage}
+
+\vpspace
+
+\begin{minipage}{\columnwidth}
+  \textbf{Particle filter SLAM:} Randomized sampling with weighted particles
+  (example: FastSLAM).
 \end{minipage}
 
 \vfill
