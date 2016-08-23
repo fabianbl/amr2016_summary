@@ -315,7 +315,7 @@
     \dot\varphi
     =
     \left[\begin{matrix}
-      \varphi_1..\varphi_N
+      \dot\varphi_1..\dot\varphi_N
     \end{matrix}\right],$
   \end{center}
 \end{minipage}
@@ -378,7 +378,7 @@
       \dot y \\
       \dot \theta
     \end{matrix}
-    \right]
+    \right]_R
     =
     \left[
     \begin{matrix}
@@ -413,7 +413,7 @@
       \dot y \\
       \dot \theta
     \end{matrix}
-    \right]
+    \right]_R
     $.
   \end{center}
 \end{minipage}
@@ -919,6 +919,12 @@
 
 \vmspace
 
+\vspace{-5pt}
+\begin{center}
+\includegraphics[width=0.85\columnwidth]{img/7_VocabularyTree.png}
+\end{center}
+\vspace{-10pt}
+
 \begin{minipage}{\columnwidth}
   Vector quantization by \textbf{k-means clustering}, minimizes squared
   Euclidean distance between points and their nearest cluster-centers:
@@ -936,43 +942,67 @@
   \end{algorithm}
 \end{minipage}
 
-\vpspace
-
 \begin{minipage}{\columnwidth}
-  Robust model fitting with \textbf{RANSAC} (RANdom SAmple Consensus) to find a
-  point set free of outliers with probability $p$ with a known fraction of
-  inliers $w$:
-
-  \vamspace
-
-  \begin{algorithm}[H]
-    \DontPrintSemicolon
-    \For{$k \leftarrow 1$ \KwTo $\frac{\log(1-p)}{\log(1-w^2)}$}
-    {
-      randomly select minimal sample data points\;
-      calculate corresponding \textbf{model parameters}\;
-      calculate \textbf{error function} for each data point\;
-      select data that supports current hypothesis\;
-    }
-  \end{algorithm}
+  \textit{Line extraction algorithms:}\\
+  A1) \textbf{Split-and-merge:}
+  \begin{compactenum}
+  \item Fit line through point set, find most distant point $P$.
+  \item If $d_P > \mathrm{threshold}$, split set at $P$. Repeat for all sets.
+  \item If two consecutive segments are collinear enough, merge.
+  \end{compactenum}
 \end{minipage}
 
 \vpspace
 
 \begin{minipage}{\columnwidth}
-  Line extraction using the \textbf{Hough transform}: Map point $(x, y)$ to
-  sinusoid in $(\theta, \rho)$ parameter space according to
+  A2) \textbf{Line regression:}
+  \begin{compactenum}
+  \item Initialize sliding window size $N_f$.
+  \item Fit a line to every $N_f$ consecutive points.
+  \item Merge overlapping line segments and re-compute line parameters for each
+    segment.
+  \end{compactenum}
+\end{minipage}
+
+\vpspace
+
+\begin{minipage}{\columnwidth}
+  A3) \textbf{RANSAC:}
+  \begin{compactenum}
+  \item Randomly select 2 points and fit a line through them.
+  \item Compute distances of all points to this line, select inliers.
+  \item Iterate $k$ times. Estimate $k=\log(1-p)/\log(1-w^2)$ ($p$:
+    probability of finding set free of outliers, $w$: fraction of inliers).
+  \end{compactenum}
+\end{minipage}
+
+\vpspace
+
+\begin{minipage}{\columnwidth}
+  A4) \textbf{Hough transform:}
+  \begin{compactenum}
+  \item For each point $(x,y)$, compute $\rho = x\cos\theta + y\sin\theta$ for
+    $\theta=[0..180]$. Increment according array entries.
+  \item Find local maxima $(\theta,\rho)$.
+  \end{compactenum}
   \vmspace
-  \begin{center}
-    $x \cos \theta + y \sin \theta = \rho.$
-  \end{center}
-  \vspace{-25pt}
   \begin{center}
     \includegraphics[width=0.9\columnwidth]{img/7_Hough.png}
   \end{center}
 \end{minipage}
 
-\vspace{7cm}
+
+%  Line extraction using the \textbf{Hough transform}: Map point $(x, y)$ to
+%  sinusoid in $(\theta, \rho)$ parameter space according to
+%  \vmspace
+%  \begin{center}
+%    $x \cos \theta + y \sin \theta = \rho.$
+%  \end{center}
+%  \vspace{-25pt}
+%  \begin{center}
+%  \end{center}
+%\end{minipage}
+
 
 % TODO:
 % -line fitting algorithms
@@ -1266,7 +1296,6 @@
 
 \vfill
 
-\columnbreak
 
 \section{SLAM I}
 
@@ -1317,19 +1346,37 @@
   1) \textbf{Full graph optimization} (bundle adjustment): Eliminate
   observations and control inputs, solve for constraints between poses and
   landmarks. Sparsify graph for real-time application.
+  \vspace{-17pt}
+  \begin{center}
+    \includegraphics[width=0.5\columnwidth]{img/10_FullGraphSLAM.png}
+  \end{center}
 \end{minipage}
 
 \begin{minipage}{\columnwidth}
   2) \textbf{Key frames:} Retain most representative poses and their dependency
   links, optimize resulting graph (e.g. PTAM).
+  \vspace{-8pt}
+  \begin{center}
+    \includegraphics[width=0.5\columnwidth]{img/10_KeyframeSLAM.png}
+  \end{center}
 \end{minipage}
 
 \begin{minipage}{\columnwidth}
   3) \textbf{Filtering:} Summarize all experience w.r.t. last pose with state
-  vector and covariance matrix (e.g. MonoSLAM).
+  vector and covariance matrix (e.g. MonoSLAM, FastSLAM).
+  \vspace{-8pt}
+  \begin{center}
+    \includegraphics[width=0.5\columnwidth]{img/10_FilteringSLAM.png}
+  \end{center}
 \end{minipage}
 
-\vpspace
+
+
+\vfill
+
+
+\section{SLAM II}
+
 
 \begin{minipage}{\columnwidth}
   \textbf{EKF SLAM} summarizes past experience in an extended state vector $y_t$
@@ -1405,21 +1452,18 @@
 \vpspace
 
 \begin{minipage}{\columnwidth}
-  \textbf{Particle filter SLAM:} Randomized sampling with weighted particles
-  (example: FastSLAM).
+  Current challenges in vision-based robotic perception:
+  \begin{compactenum}
+  \item High-fidelity localization and mapping.
+  \item Dense scene reconstruction.
+  \item Place recognition.
+  \item Collaborative robot sensing and mapping.
+  \item Navigation (obstacle avoidance, path planning).
+  \end{compactenum}
 \end{minipage}
 
 \vfill
 
-
-\section{SLAM II}
-
-\blindtext[3]
-
-
-\vfill
-
-\columnbreak
 
 \section{Planning I}
 
@@ -1547,7 +1591,7 @@
   \begin{compactitem}
   \item \textbf{Bug algorithm:} Follow the boundary of an obstacle, depart from
     point of shortest distance to the goal.
-  \item \textbf{Vector field histogram (VHF):} Use polar histogram showing
+  \item \textbf{Vector field histogram (VFH):} Use polar histogram showing
     probability of obstacle occurence.
   \item \textbf{Bubble band technique:} Compute bubbles representing max.
     free space around given robot configuration.
