@@ -719,7 +719,7 @@
 \end{minipage}
 
 \begin{minipage}{\columnwidth}
-  \textbf{Convolution} is correlation with a flipped filter:
+  \textbf{Convolution} is correlation with a flipped filter/image:
   \vmspace
   \begin{center}
     $J(x) = F \ast I(x) = \sum_{i=-N}^N F(i) I(x - i)$.
@@ -756,7 +756,7 @@
   \end{center}
 \end{minipage}
 
-\vpspace
+\vspace{3pt}
 
 \begin{minipage}{\columnwidth}
   \textbf{Laplacian of Gaussian} (second derivative operator):
@@ -781,7 +781,6 @@
 
 \vpspace
 
-
 \begin{minipage}{\columnwidth}
   \textbf{Template matching} using \textbf{sum of squared differences}:
   \vmspace
@@ -800,20 +799,62 @@
 \vpspace
 
 \begin{minipage}{\columnwidth}
-  \textbf{Sobel masks} as approximate derivative filers:
+  \textbf{Zero-mean normalized cross correlation (ZNCC)}: Invariant to local
+  average intensity. Maximize:
+  \vmspace
+  \begin{center}
+  $
+  \mathrm{ZNCC}(x) = \dfrac{\sum_i
+    \left[F(i)- \mu_F\right] \left[I(x + i) - \mu_{I_x} \right]}
+  {
+    \sqrt{\sum_i \left[F(i) - \mu_F\right]^2}
+    \sqrt{\sum_i \left[I(x+i) - \mu_{I_x}\right]^2}
+  },
+    $\\[3pt]
+  $
+    \mu_F = \frac{\sum_i F(i)}{2N + 1},\;\;
+    \mu_{I_x} = \frac{\sum_i I(x+i)}{2N + 1},\;\;
+    i=-N..N.
+  $
+  \end{center}
+\end{minipage}
+
+\vpspace
+
+\begin{minipage}{\columnwidth}
+  \textbf{Roberts/Prewitt/Sobel masks} (approx. derivatives):
   \vmspace
   \begin{center}
     $I_x =$
+    \setlength\tabcolsep{1.2pt}
+    \begin{tabular}{|c|c|c|}\hline
+      0 & -1 \\\hline
+      1 & 0 \\\hline
+    \end{tabular} /
+    \begin{tabular}{|c|c|c|}\hline
+      -1 & 0 & 1 \\\hline
+      -1 & 0 & 1 \\\hline
+      -1 & 0 & 1 \\\hline
+    \end{tabular} /
     \begin{tabular}{|c|c|c|}\hline
       -1 & 0 & 1 \\\hline
       -2 & 0 & 2 \\\hline
       -1 & 0 & 1 \\\hline
     \end{tabular} ,
-    $\;\;I_x =$
+    $\;I_y =$
     \begin{tabular}{|c|c|c|}\hline
-      1 & 2 & 1 \\\hline
+      -1 & 0 \\\hline
+      0 & 1 \\\hline
+    \end{tabular} /
+    \begin{tabular}{|c|c|c|}\hline
+      -1 & -1 & -1 \\\hline
       0 & 0 & 0 \\\hline
+      1 & 1 & 1 \\\hline
+    \end{tabular} /
+    \begin{tabular}{|c|c|c|}\hline
       -1 & -2 & -1 \\\hline
+      0 & 0 & 0 \\\hline
+      1 & 2 & 1 \\\hline
     \end{tabular} .
   \end{center}
 \end{minipage}
@@ -873,10 +914,6 @@
     \end{minipage}
   \end{minipage}
 \end{minipage}
-
-\vfill
-
-\vtspace
 
 \section{Perception IV}
 
@@ -1046,7 +1083,7 @@
   Ingredients of probabilistic \textbf{map-based localization}:
   \begin{compactenum}
   \item The initial probability distribution $bel(x_0)$.
-  \item \textit{True} \textbf{map} $M = \{m_0\cdots m_n\}$ of the environment.
+  \item \textit{True} \textbf{map} $M = \{m_0.. m_n\}$ of the environment.
   \item Data: $u_t$ (proprioceptive, control), $z_t$ (exteroceptive).
   \item Probabilistic \textbf{motion model} $p(x_t|u_t, x_{t-1})$, e.g. based on
     noise-free model $x_t = f(x_{t-1}, u_t)$.
@@ -1226,29 +1263,66 @@
 % - check topological approach with Markov from book
 % - performance enhancements for Markov (randomized sampling)
 
+
 \vfill
 
-\vtspace
+\columnbreak
 
 \section{SLAM I}
 
 \vmspace
 
-\blindtext[3]
+\begin{minipage}{\columnwidth}
+  \textit{Precedessors of SLAM:}
+  \begin{compactitem}
+  \item \textbf{Photogrammetry:} Use (aerial) photographs to make measurements
+    between points, recover exact positions.
+  \item \textbf{Structure from Motion (SfM):} Estimate 3D structure from a
+    sequence of images, bundle adjustement.
+  \end{compactitem}
+\end{minipage}
+
+\vpspace
+
+\includegraphics[width=\columnwidth]{img/10_SLAM.png}
+
+\begin{minipage}{\columnwidth}
+  \textbf{Full SLAM:} Given the the landmark observations $  \{z_0..z_k\}$ and
+  the control inputs $\{u_0..u_t\}$, estimate the joint posterior
+  probability over the robot path $\{x_0..x_t\}$ and the \textit{true} map
+  $\{m_0..m_{n}\}$ , i.e. find
+  \vmspace
+  \begin{center}
+    $
+    p(x_{0:t}, m_{0:n}| z_{0:k}, u_{0:t}).
+    $
+  \end{center}
+\end{minipage}
+
+\vpspace
+
+
+\begin{minipage}{\columnwidth}
+  \textbf{Online SLAM:} Recover the posterior for the current pose
+  \vmspace
+  \begin{center}
+    $
+    p(x_{t}, m_{0:n}| z_{0:k}, u_{0:t}).
+    $
+  \end{center}
+\end{minipage}
 
 \vfill
 
-\vtspace
 
 \section{SLAM II}
 
-\vmspace
-
 \blindtext[3]
+
 
 \vfill
 
-\vtspace
+\columnbreak
 
 \section{Planning I}
 
@@ -1417,7 +1491,7 @@
     {
       Node curr = Queue.pop()\;
       \textbf{if} curr \textbf{is} Goal \textbf{return}\;
-      Closed.push(curr);
+      Closed.push(curr)\;
       Nodes next = expand(curr)\;
       \For{\textnormal{\textbf{all} next \textbf{not in} Closed}}
       {
