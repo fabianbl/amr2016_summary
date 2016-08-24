@@ -472,30 +472,29 @@
 \vpspace
 
 \begin{minipage}{\columnwidth}
-  The \textbf{mean/expectation value} $\mathrm{E}[x] = \mu$ and the
-  \textbf{variance} $\mathrm{Var}[x] = \sigma^2$ of a \textbf{continuous random
-  variable} $x$ with \textbf{probability density function (PDF)} $p(x)$ are
-  computed as
-  \vmspace
+  \textbf{Phase-shift measurement} between transmitted and reflected laser beam
+  ($D^\prime$: total distance, $\lambda$: modulating wavelength, $f$:
+  modulating frequency, $\theta$: phase difference):
   \begin{center}
-    $\mu = \int_{-\infty}^{\infty}xp(x)\mathrm dx,\;\;
-    \sigma^2 = \int_{-\infty}^{\infty} = (x - \mu)^2 p(x)
-    \mathrm dx.$
+    $
+    D^\prime
+    =
+    2D
+    =
+    \frac{\theta}{2\pi}\lambda.
+    $
   \end{center}
 \end{minipage}
 
 \vpspace
 
 \begin{minipage}{\columnwidth}
-  The PDF for a one-dimensional \textbf{Gaussian distribution}:
-  \vmspace
+  \textbf{Optical triangulation} (1D): Determine object distance as
   \begin{center}
-    $p(x)
-    =
-    \mathcal N (\mu, \sigma^2)
-    =
-    \dfrac{1}{\sigma \sqrt{2\pi}}\,\mathrm{exp}\left[-\dfrac{(x -
-    \mu)^2}{2\sigma^2}\right].$
+    $
+    D = f\frac{L}{x},\;\;L:
+    $
+    distance laser/PSD.
   \end{center}
 \end{minipage}
 
@@ -942,6 +941,22 @@
   \end{algorithm}
 \end{minipage}
 
+\vpspace
+
+\begin{minipage}{\columnwidth}
+  \textbf{Term frequency-inverse document frequency (tf-idf):} Measures the
+  importance of visual word inside database as $tf\text{-}idf = tf_{ij}\cdot
+  idf_i$ with
+  \begin{center}
+    $
+    tf_{ij} = \frac{n_{i,j}}{\sum_k n_{k,j}},\;\;
+    idf_i = \log\frac{|\text{num. images}|}{|\text{num. images with } w_i|}.
+    $
+  \end{center}
+\end{minipage}
+
+\vpspace
+
 \begin{minipage}{\columnwidth}
   \textit{Line extraction algorithms:}\\
   A1) \textbf{Split-and-merge:}
@@ -985,10 +1000,10 @@
     $\theta=[0..180]$. Increment according array entries.
   \item Find local maxima $(\theta,\rho)$.
   \end{compactenum}
-  \vmspace
-  \begin{center}
-    \includegraphics[width=0.9\columnwidth]{img/7_Hough.png}
-  \end{center}
+  %\vmspace
+  %\begin{center}
+  %  \includegraphics[width=0.9\columnwidth]{img/7_Hough.png}
+  %\end{center}
 \end{minipage}
 
 
@@ -1014,6 +1029,20 @@
 
 \vmspace
 
+\begin{minipage}{\columnwidth}
+  The \textbf{mean/expectation value} $\mathrm{E}[x] = \mu$ and the
+  \textbf{variance} $\mathrm{Var}[x] = \sigma^2$ of a \textbf{continuous random
+  variable} $x$ with \textbf{probability density function (PDF)} $p(x)$ are
+  computed as
+  \vmspace
+  \begin{center}
+    $\mu = \int_{-\infty}^{\infty}xp(x)\mathrm dx,\;\;
+    \sigma^2 = \int_{-\infty}^{\infty} = (x - \mu)^2 p(x)
+    \mathrm dx.$
+  \end{center}
+\end{minipage}
+
+\vpspace
 
 \begin{minipage}{\columnwidth}
   \textbf{Sum rule} (1) and \textbf{product rule} (2):
@@ -1042,6 +1071,20 @@
   \begin{center}
     $p(x|y) = \frac{p(y|x)p(x)}{p(y)} = \eta\, p(y|x)p(x),\;\;\;
     \eta = p(y)^{-1}.$
+  \end{center}
+\end{minipage}
+
+\vpspace
+
+\begin{minipage}{\columnwidth}
+  PDF for one-dimensional \textbf{Gaussian distribution} $\mathcal N (\mu,
+  \sigma^2)$:
+  \vmspace
+  \begin{center}
+    $p(x)
+    =
+    \dfrac{1}{\sigma \sqrt{2\pi}}\,\mathrm{exp}\left[-\dfrac{(x -
+    \mu)^2}{2\sigma^2}\right].$
   \end{center}
 \end{minipage}
 
@@ -1110,21 +1153,6 @@
 \vpspace
 
 \begin{minipage}{\columnwidth}
-  Ingredients of probabilistic \textbf{map-based localization}:
-  \begin{compactenum}
-  \item The initial probability distribution $bel(x_0)$.
-  \item \textit{True} \textbf{map} $M = \{m_0.. m_n\}$ of the environment.
-  \item Data: $u_t$ (proprioceptive, control), $z_t$ (exteroceptive).
-  \item Probabilistic \textbf{motion model} $p(x_t|u_t, x_{t-1})$, e.g. based on
-    noise-free model $x_t = f(x_{t-1}, u_t)$.
-  \item Probabilistic \textbf{measurement model} $p(z_t|x_t,M)$, e.g. based on
-    noise-free model $z_t = h(x_t, M)$.
-  \end{compactenum}
-\end{minipage}
-
-\vpspace
-
-\begin{minipage}{\columnwidth}
   Classification of localization problems:
   \begin{compactitem}
   \item \textbf{Position tracking:} $bel(x_0)$ is \textbf{Dirac delta}
@@ -1184,6 +1212,21 @@
 \section{Localization II}
 
 \vmspace
+
+\begin{minipage}{\columnwidth}
+  Ingredients of probabilistic \textbf{map-based localization}:
+  \begin{compactenum}
+  \item The initial probability distribution $bel(x_0)$.
+  \item \textit{True} \textbf{map} $M = \{m_0.. m_n\}$ of the environment.
+  \item Data: $u_t$ (proprioceptive, control), $z_t$ (exteroceptive).
+  \item Probabilistic \textbf{motion model} $p(x_t|u_t, x_{t-1})$, e.g. based on
+    noise-free model $x_t = f(x_{t-1}, u_t)$.
+  \item Probabilistic \textbf{measurement model} $p(z_t|x_t,M)$, e.g. based on
+    noise-free model $z_t = h(x_t, M)$.
+  \end{compactenum}
+\end{minipage}
+
+\vpspace
 
 \begin{minipage}{\columnwidth}
   According to the \textbf{Markov assumption}, the robot's belief state
@@ -1302,7 +1345,7 @@
 \vmspace
 
 \begin{minipage}{\columnwidth}
-  \textit{Precedessors of SLAM:}
+  \textit{Predecessors of SLAM:}
   \begin{compactitem}
   \item \textbf{Photogrammetry:} Use (aerial) photographs to make measurements
     between points, recover exact positions.
@@ -1377,6 +1420,7 @@
 
 \section{SLAM II}
 
+\vmspace
 
 \begin{minipage}{\columnwidth}
   \textbf{EKF SLAM} summarizes past experience in an extended state vector $y_t$
@@ -1447,6 +1491,56 @@
   \end{center}
   \vmspace
   using the Kalman gain $K_t = \hat P_{y_t}H(\Sigma_{IN})^{-1}$.
+\end{minipage}
+
+\vpspace
+
+\begin{minipage}{\columnwidth}
+  \textbf{MonoSLAM:} EKF SLAM implementation. Motion model:
+  \vmspace
+  \begin{center}
+    $
+    \textbf f_v
+    =
+    \left[
+    \begin{matrix}
+      \mathbf r_\mathrm{new}^W \\
+      \mathbf q_\mathrm{new}^{WR} \\
+      \mathbf v_\mathrm{new}^W \\
+      \mathbf \omega_\mathrm{new}^W
+    \end{matrix}
+    \right]
+    =
+    \left[
+    \begin{matrix}
+      \mathbf r^W
+      + (\mathbf v^W + \mathbf V^W)\Delta t \\
+      \mathbf q^{WR}
+      \times \mathbf q((\omega^W+\mathbf\Omega^W)\Delta t)\\
+      \mathbf v^W + \mathbf V^W\\
+      \mathbf \omega^W + \mathbf \Omega^W
+    \end{matrix}
+    \right],\;\;
+    $
+  \end{center}
+  \vmspace
+  where the unknown linear and angular accelerations
+  $
+    \left[
+    \begin{matrix}
+      \mathbf V^W &
+      \mathbf \Omega^W
+    \end{matrix}
+    \right]
+    =
+    \left[
+    \begin{matrix}
+      \mathbf a^W\Delta t &
+      \mathbf \alpha^W\Delta t
+    \end{matrix}
+    \right]
+  $
+  cause an impulse in velocity.
 \end{minipage}
 
 \vpspace
@@ -1592,7 +1686,7 @@
   \item \textbf{Bug algorithm:} Follow the boundary of an obstacle, depart from
     point of shortest distance to the goal.
   \item \textbf{Vector field histogram (VFH):} Use polar histogram showing
-    probability of obstacle occurence.
+    probability of obstacle occurrence.
   \item \textbf{Bubble band technique:} Compute bubbles representing max.
     free space around given robot configuration.
   \end{compactitem}
